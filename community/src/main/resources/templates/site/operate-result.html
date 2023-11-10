@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" th:href="@{/img/whale.png}"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<title>Results</title>
+</head>
+<body class="bg-white">
+	<div class="nk-container">
+
+		<!-- Content -->
+		<div class="main">
+			<div class="container mt-5">
+				<div class="jumbotron">
+					<p class="lead" th:text="${msg}"></p>
+					<hr class="my-4">
+					<p>
+						You will be redirected to <span th:text="${pageName}"></span> within <span id="seconds" class="text-danger">20</span> seconds.
+					</p>
+					<p>
+						Or click  <a id="target" th:href="@{${target}}" class="text-primary">here</a>.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script>
+		$(function(){
+			setInterval(function(){
+				var seconds = $("#seconds").text();
+				$("#seconds").text(--seconds);
+				if(seconds == 0) {
+					location.href = $("#target").attr("href");
+				}
+			}, 1000);
+		});
+	</script>
+</body>
+</html>

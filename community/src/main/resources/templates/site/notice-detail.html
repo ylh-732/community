@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" th:href="@{/img/whale.png}"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" th:href="@{/css/letter.css}" />
+	<title>Notifications</title>
+</head>
+<body>
+	<div class="nk-container">
+		<!-- Header -->
+		<header class="bg-dark sticky-top" th:replace="index::header"></header>
+
+		<div class="main">
+			<div class="container">
+				<div class="row">
+					<div class="col-9 text-right"></div>
+					<div class="col-2 text-right">
+						<button type="button" class="btn btn-dark btn-sm" onclick="back();">Return</button>
+					</div>
+				</div>
+				
+				<!-- Notices -->
+				<ul class="list-unstyled mt-4">
+					<li class="media pb-3 pt-3 mb-2" th:each="map:${notices}">
+						<img th:src="@{/img/notification.png}" class="mr-4 rounded-circle user-header" alt="系统图标">
+						<div class="toast show d-lg-block" role="alert" aria-live="assertive" aria-atomic="true">
+							<div class="toast-header">
+								<strong class="mr-auto" th:utext="${map.fromUser.username}"></strong>
+								<small th:text="${#dates.format(map.notice.createTime, 'yyyy-MM-dd HH:mm:ss')}"></small>
+								<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="toast-body">
+								<span th:if="${topic.equals('comment')}">
+									<i th:utext="${map.user.username}"></i>
+									replied to your
+									<b th:text="${map.entityType == 1 ? 'post ' : 'comment '}"></b>
+									<a th:href="@{|/discuss/detail/${map.postId}|}">
+										<i class="fa-solid fa-arrow-right" style="color: #3c73a8;"></i>
+									</a>
+								</span>
+								<span th:if="${topic.equals('like')}">
+									<i th:utext="${map.user.username}"></i>
+									liked your
+									<b th:text="${map.entityType == 1 ? 'post ' : 'comment '}"></b>
+									<a th:href="@{|/discuss/detail/${map.postId}|}">
+										<i class="fa-solid fa-arrow-right" style="color: #3c73a8;"></i>
+									</a>
+								</span>
+								<span th:if="${topic.equals('follow')}">
+									<i th:utext="${map.user.username}"></i>
+									started following you
+									<a th:href="@{|/user/profile/${map.user.id}|}">
+										<i class="fa-solid fa-arrow-right" style="color: #3c73a8;"></i>
+									</a>
+								</span>
+							</div>
+						</div>
+					</li>
+				</ul>
+
+				<!-- Pagination -->
+				<nav class="mt-5" th:replace="index::pagination"></nav>
+			</div>
+		</div>
+
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/e7db13a153.js" crossorigin="anonymous"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script th:src="@{/js/letter.js}"></script>
+
+	<script>
+		function back() {
+			location.href = CONTEXT_PATH + "/notice/list";
+		}
+	</script>
+</body>
+</html>

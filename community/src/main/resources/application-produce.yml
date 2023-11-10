@@ -1,0 +1,44 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /community
+
+spring:
+  thymeleaf:
+    cache: true
+  redis:
+    database: 11
+    host: localhost
+    port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: community-consumer-group
+      enable-auto-commit: true
+      auto-commit-interval: 3000
+  data:
+    elasticsearch:
+      cluster-name: ylh
+      cluster-nodes: 127.0.0.1:9300
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/community
+    username: root
+    password: Yang_Linghui_1997
+
+mybatis:
+  mapper-locations: classpath:com/ylh/community/mapper/*.xml
+  type-aliases-package: com.ylh.community.entity
+  configuration:
+    use-generated-keys: true
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    mapper: debug
+
+community:
+  path:
+    domain: http://8.217.6.213:8080
+    upload: /tmp/upload

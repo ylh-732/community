@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" th:href="@{/img/whale.png}"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<title>Search</title>
+</head>
+<body>
+	<div class="nk-container">
+		<!-- Header -->
+		<header class="bg-dark sticky-top" th:replace="index::header"></header>
+
+
+		<div class="main">
+			<div class="container">
+				<ul class="list-unstyled mt-4" th:each="map : ${discussPosts}">
+					<li class="media pb-3 pt-3 mb-3 border-bottom">
+						<img th:src="${map.user.headerUrl}" class="mr-4 rounded-circle user-header" alt="用户头像">
+						<div class="media-body">
+							<h6 class="mt-0 mb-3">
+								<a style="color: #3c73a8;"
+								   th:href="@{|/discuss/detail/${map.post.id}|}"
+								   th:utext="${map.post.title}">
+								</a>
+							</h6>
+							<div class="mb-3" th:utext="${map.post.content}"></div>
+							<div class="text-muted font-size-12">
+								<u class="mr-3" th:utext="${map.user.username}"></u> created at
+								<b th:text="${#dates.format(map.post.createTime,'yyyy-MM-dd HH:mm')}"></b>
+								<ul class="d-inline float-right">
+									<li class="d-inline ml-2">
+										<i class="fa-solid fa-heart" style="color: #A91B0D;"></i>
+										<i class="mr-3" th:text="${map.likeCount}"></i>
+									</li>
+									<li class="d-inline ml-2">&nbsp;</li>
+									<li class="d-inline ml-2">
+										<i class="fa-regular fa-comment" style="color: #69727B;"></i>
+										<span th:text="${map.post.commentCount}"></span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</li>
+				</ul>
+
+				<!-- Pagination -->
+				<nav class="mt-5" th:replace="index::pagination"></nav>
+			</div>
+		</div>
+
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script src="https://kit.fontawesome.com/e7db13a153.js" crossorigin="anonymous"></script>
+</body>
+</html>

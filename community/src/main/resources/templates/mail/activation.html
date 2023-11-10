@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Activate your account</title>
+</head>
+<body>
+	<div>
+		<p th:text="|Dear ${username}|"></p>
+		<p>
+			Thank you very much for applying for an account at community.
+		</p>
+		<p>
+			To activate your account, please click
+			<a th:text="${url}"></a>
+		</p>
+	</div>
+</body>
+</html>

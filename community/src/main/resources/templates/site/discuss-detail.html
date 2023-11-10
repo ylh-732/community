@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" th:href="@{/img/whale.png}"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" th:href="@{/css/discuss-detail.css}" />
+	<title>Post</title>
+</head>
+<body>
+	<div class="nk-container">
+		<!-- Header -->
+		<header class="bg-dark sticky-top" th:replace="index::header"></header>
+
+		<div class="main">
+			<div class="container">
+				<!-- Title -->
+				<h4 class="mb-4">
+					<span th:utext="${post.title}"></span>
+					<div class="float-right">
+						<input type="hidden" id="postId" th:value="${post.id}">
+						<button type="button" id="topBtn"
+								th:class="|${post.type == 1 ? 'btn-secondary' : 'btn-dark'} btn btn-sm|"
+								th:text="${post.type == 1 ? 'Unpin' : 'Pin'}"
+								sec:authorize="hasAnyAuthority('moderator', 'admin')">
+						</button>
+						<button type="button" class="btn btn-dark btn-sm" id="deleteBtn"
+								sec:authorize="hasAnyAuthority('moderator', 'admin')">
+							Delete
+						</button>
+					</div>
+				</h4>
+				<!-- Author -->
+				<div class="media pb-3 border-bottom">
+					<a th:href="@{|/user/profile/${user.id}|}">
+						<img th:src="${user.headerUrl}" class="align-self-start mr-4 rounded-circle user-header" alt="用户头像" >
+					</a>
+					<div class="media-body">
+						<div class="mt-0 text-dark" th:utext="${user.username}"></div>
+						<div class="text-muted mt-3">
+							created at <b th:text="${#dates.format(post.createTime, 'yyyy-MM-dd HH:mm:ss')}"></b>
+							<ul class="d-inline float-right">
+								<li class="d-inline ml-2">
+									<a href="javascript:;" th:onclick="|like(this, 1, ${post.id}, ${post.userId}, ${post.id})|" class="text-dark">
+										<i
+												th:class = "${likeStatus} == 1 ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+												th:style = "${likeStatus} == 1 ? 'color: #A91B0D;' : 'color: #2D3238;'">
+										</i>
+										<span th:text="${likeCount}"></span>
+									</a>
+								</li>
+								<li class="d-inline ml-2">&nbsp;</li>
+								<li class="d-inline ml-2">
+									<a href="#replyform" class="text-dark">
+										<i class="fa-regular fa-comment" style="color: #2D3238;"></i>
+										<i th:text="${post.commentCount}"></i>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>	
+				<!-- Content -->
+				<div class="mt-4 mb-3 content" th:utext="${post.content}"></div>
+			</div>
+
+			<!-- Comments and replies -->
+			<div class="container mt-3">
+				<div class="row">
+					<div class="col-12 text-right">
+						<a href="#replyform" class="btn btn-dark btn-sm">&nbsp;&nbsp;Add a comment&nbsp;&nbsp;</a>
+					</div>
+				</div>
+				<!-- comments -->
+				<ul class="list-unstyled mt-4">
+					<li class="media pb-3 pt-3 mb-3 border-bottom" th:each="cvo:${comments}">
+						<a th:href="@{|/user/profile/${cvo.user.id}|}">
+							<img th:src="${cvo.user.headerUrl}" class="align-self-start mr-4 rounded-circle user-header" alt="用户头像" >
+						</a>
+						<div class="media-body">
+							<div class="mt-0">
+								<span class="font-size-12 text-dark" th:utext="${cvo.user.username}"></span>
+								<span class="badge badge-secondary float-right floor">
+									<i th:text="${page.offset + cvoStat.count}"></i>
+								</span>
+							</div>
+							<div class="mt-2" th:utext="${cvo.comment.content}"></div>
+							<div class="mt-4 text-muted font-size-12">
+								<span>created at <b th:text="${#dates.format(cvo.comment.createTime, 'yyyy-MM-dd HH:mm:ss')}"></b></span>
+								<ul class="d-inline float-right">
+									<li class="d-inline ml-2">
+										<a href="javascript:;" th:onclick="|like(this, 2, ${cvo.comment.id}, ${cvo.comment.userId}, ${post.id})|" class="text-dark">
+											<i
+													th:class="${cvo.likeStatus} == 1 ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+													th:style="${cvo.likeStatus} == 1 ? 'color: #A91B0D;' : 'color: #2D3238;'">
+											</i>
+											<span th:text="${cvo.likeCount}"></span>
+										</a>
+									</li>
+									<li class="d-inline ml-2">&nbsp;</li>
+									<li class="d-inline ml-2">
+										<a href="#" class="text-dark">
+											<i class="fa-regular fa-comment" style="color: #2D3238;"></i>
+											<i th:text="${cvo.replyCount}"></i>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<!-- replies -->
+							<ul class="list-unstyled mt-4 bg-gray p-3 font-size-12 text-muted">
+								<li class="pb-3 pt-3 mb-3 border-bottom" th:each="rvo:${cvo.replies}">
+									<div>
+										<span th:if="${rvo.target == null}">
+											<b style="color: #898121;" th:text="${rvo.user.username}"></b>:&nbsp;&nbsp;
+										</span>
+										<span th:if="${rvo.target != null}">
+											<i style="color: #898121;" th:text="${rvo.user.username}"></i> replied to
+											<b style="color: #898121;" th:text="${rvo.target.username}"></b>:&nbsp;&nbsp;
+										</span>
+										<span th:utext="${rvo.reply.content}"></span>
+									</div>
+									<div class="mt-3">
+										<span th:text="${#dates.format(rvo.reply.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+										<ul class="d-inline float-right">
+											<li class="d-inline ml-2">
+												<a href="javascript:;" th:onclick="|like(this, 2, ${rvo.reply.id},${rvo.reply.userId}, ${post.id})|" class="text-dark">
+													<i
+															th:class="${rvo.likeStatus} == 1 ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"
+															th:style="${rvo.likeStatus} == 1 ? 'color: #A91B0D;' : 'color: #2D3238;'">
+													</i>
+													<span th:text="${rvo.likeCount}"></span>
+												</a>
+											</li>
+											<li class="d-inline ml-2">&nbsp;</li>
+											<li class="d-inline ml-2">
+												<a th:href="|#reply-${rvoStat.count}|" data-toggle="collapse" style="color: #3c73a8;">Reply</a>
+											</li>
+										</ul>
+										<!-- Reply to comment's reply -->
+										<div th:id="|reply-${rvoStat.count}|" class="mt-4 collapse">
+											<form method="post" th:action="@{|/comment/add/${post.id}|}">
+												<div>
+													<input type="text" class="input-size" name="content" th:placeholder="|Reply to ${rvo.user.username}...|"/>
+													<input type="hidden" name="entityType" value="2">
+													<input type="hidden" name="entityId" th:value="${cvo.comment.id}">
+													<input type="hidden" name="targetId" th:value="${rvo.user.id}">
+												</div>
+												<div class="text-right mt-2">
+													<button type="submit" class="btn btn-dark btn-sm" onclick="#">&nbsp;&nbsp;Reply&nbsp;&nbsp;</button>
+												</div>
+											</form>
+										</div>
+									</div>								
+								</li>
+								<!-- Reply to comment -->
+								<li class="pb-3 pt-3">
+									<form method="post" th:action="@{|/comment/add/${post.id}|}">
+										<div>
+											<input type="text" class="input-size" name="content" th:placeholder="|Reply to ${cvo.user.username}...|"/>
+											<input type="hidden" name="entityType" value="2">
+											<input type="hidden" name="entityId" th:value="${cvo.comment.id}">
+										</div>
+									    <div class="text-right mt-2">
+											<button type="submit" class="btn btn-dark btn-sm" onclick="#">&nbsp;&nbsp;Reply&nbsp;&nbsp;</button>
+										</div>
+									</form>
+								</li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				<!-- Pagination -->
+				<nav class="mt-5" th:replace="index::pagination"></nav>
+			</div>
+			<!-- Comment to post -->
+			<div class="container mt-3">
+				<form class="replyform" method="post" th:action="@{|/comment/add/${post.id}|}">
+					<p class="mt-3">
+						<a name="replyform"></a>
+						<textarea name="content"></textarea>
+						<input type="hidden" name="entityType" value="1">
+						<input type="hidden" name="entityId" th:value="${post.id}">
+					</p>
+					<p class="text-right">
+						<button type="submit" class="btn btn-dark btn-sm">&nbsp;&nbsp;Add a comment&nbsp;&nbsp;</button>
+					</p>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/e7db13a153.js" crossorigin="anonymous"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script th:src="@{/js/discuss.js}"></script>
+</body>
+</html>

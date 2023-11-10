@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" th:href="@{/img/whale.png}"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<title>Settings</title>
+</head>
+
+<body>
+	<div class="nk-container">
+		<!-- Header -->
+		<header th:replace="index::header"></header>
+
+		<!-- Contents -->
+		<div class="main">
+			<div class="container p-5 mt-3 mb-3">
+				<!-- Change Profile Photo -->
+				<h5 class="text-left text-dark border-bottom pb-2">Change Profile Photo</h5>
+				<form class="mt-5" method="post" enctype="multipart/form-data" th:action="@{/user/upload}">
+					<div class="form-group row mt-4">
+						<label for="head-image" class="col-sm-4 col-form-label text-right">Profile photo:</label>
+						<div class="col-sm-7">
+							<div class="custom-file">
+								<input type="file" th:class="|custom-file-input ${error != null ? 'is-invalid' : ''}|"
+									   id="head-image" name="headerImage" lang="es" required="">
+								<label class="custom-file-label" for="head-image">Select from computer</label>
+							</div>
+							<div class="invalid-feedback" th:text="${error}"></div>
+						</div>
+					</div>
+					<div class="form-group row mt-4">
+						<div class="col-sm-6"></div>
+						<div class="col-sm-4 text-center">
+							<button type="submit" class="btn btn-dark form-control">Upload</button>
+						</div>
+					</div>
+				</form>
+
+				<!-- Reset password -->
+				<h5 class="text-left text-dark border-bottom pb-2 mt-5">Reset Password</h5>
+				<form class="mt-5" th:action="@{/user/updatePassword}" method="post">
+					<div class="form-group row mt-4">
+						<label for="old-password" class="col-sm-4 col-form-label text-right">Original password:</label>
+						<div class="col-sm-7">
+							<input type="password" id="old-password" name="oldPassword" required
+								   th:class = "|form-control ${oldPasswordMsg != null ? 'is-invalid' : ''}|">
+							<div class="invalid-feedback" th:text="${oldPasswordMsg}"></div>
+						</div>
+					</div>
+					<div class="form-group row mt-4">
+						<label for="new-password" class="col-sm-4 col-form-label text-right">New password:</label>
+						<div class="col-sm-7">
+							<input type="password" id="new-password" name="newPassword" required
+								   th:class = "|form-control ${newPasswordMsg != null ? 'is-invalid' : ''}|">
+							<div class="invalid-feedback" th:text="newPasswordMsg"></div>
+						</div>
+					</div>
+					<div class="form-group row mt-4">
+						<div class="col-sm-6"></div>
+						<div class="col-sm-4 text-center">
+							<button type="submit" class="btn btn-dark form-control">Save</button>
+						</div>
+					</div>
+				</form>				
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js" crossorigin="anonymous"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script>
+		$(function(){
+			bsCustomFileInput.init();
+		});
+	</script>
+</body>
+</html>

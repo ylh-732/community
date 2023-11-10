@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" th:href="@{/img/whale.png}"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<title>Following</title>
+</head>
+<body>
+	<div class="nk-container">
+		<!-- Header -->
+		<header class="bg-dark sticky-top" th:replace="index::header"></header>
+
+		<div class="main">
+			<div class="container">
+
+				<!-- Following or followers -->
+				<div class="position-relative">
+					<ul class="nav nav-tabs mb-3">
+						<li class="nav-item">
+							<a class="nav-link position-relative active"
+							   th:href="@{|/followees/${user.id}|}">Following
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link position-relative"
+							   th:href="@{|/followers/${user.id}|}">Followers
+							</a>
+						</li>
+					</ul>
+					<a th:href="@{|/user/profile/${user.id}|}" class="position-absolute rt-0" style="color: #3c73a8;">Return</a>
+				</div>
+				
+				<!-- Following -->
+				<ul class="list-unstyled">
+					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:each="map : ${users}">
+						<a th:href="@{|/user/profile/${map.user.id}|}">
+							<img th:src="${map.user.headerUrl}" class="mr-4 rounded-circle user-header" alt="用户头像" >
+						</a>
+						<div class="media-body">
+							<h6 class="mt-0 mb-3">
+								<span class="text-dark" th:utext="${map.user.username}"></span>
+							</h6>
+							<div>
+								<input type="hidden" id="entityId" th:value="${map.user.id}">
+								<button type="button"
+										th:class="|${map.hasFollowed ? 'btn-secondary' : 'btn-dark'} btn btn-sm float-right mr-5 follow-btn|"
+										th:text="${map.hasFollowed ? 'Following' : 'Follow'}"
+										th:if="${loginUser != null && loginUser.id != map.user.id}">
+								</button>
+							</div>
+						</div>
+					</li>
+				</ul>
+
+				<!-- Pagination -->
+				<nav class="mt-5" th:replace="index::pagination"></nav>
+			</div>
+		</div>
+
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script th:src="@{/js/profile.js}"></script>
+</body>
+</html>

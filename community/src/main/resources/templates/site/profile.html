@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" th:href="@{/img/whale.png}"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}"/>
+	<title>Profile</title>
+</head>
+<body>
+	<div class="nk-container">
+		<!-- Header -->
+		<header class="bg-dark sticky-top" th:replace="index::header"></header>
+
+		<!-- Content -->
+		<div class="main">
+			<div class="container">
+
+				<!-- Options -->
+				<div class="position-relative">
+					<ul class="nav nav-tabs">
+						<li class="nav-item">
+							<a class="nav-link active" th:href="@{|/user/profile/${user.id}|}">
+								Profile
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{|/user/my-posts/${user.id}|}">
+								Posts
+							</a>
+						</li>
+					</ul>
+				</div>
+
+				<!-- Profile -->
+				<div class="media mt-5">
+					<img th:src="${user.headerUrl}" class="align-self-start mr-4 rounded-circle user-header" alt="用户头像">
+					<div class="media-body">
+						<h5 class="mt-0 text-dark">
+							<span th:utext="${user.username}"></span>
+							<input type="hidden" id="entityId" th:value="${user.id}">
+							<button type="button"
+									th:class="|${hasFollowed ? 'btn-secondary' : 'btn-dark'} btn btn-sm float-right mr-5 follow-btn|"
+									th:text="${hasFollowed ? 'Following' : 'Follow'}"
+									th:if="${loginUser != null && loginUser.id != user.id}">
+							</button>
+						</h5>
+						<div class="text-dark mt-3">
+							<span>Joined at <i class="text-dark" th:text="${#dates.format(user.createTime, 'yyyy-MM-dd HH:mm:ss')}"></i></span>
+						</div>
+						<div class="text-dark mt-3 mb-5">
+							<span><a style="color: #3c73a8;" th:href="@{|/followees/${user.id}|}" th:text="${followeeCount}"></a> following</span>
+							<span class="ml-4">
+								<a style="color: #3c73a8;" th:href="@{|/followers/${user.id}|}" th:text="${followerCount}"></a>
+								<i th:text="${followerCount == 1} ? 'follower' : 'followers'"></i>
+							</span>
+							<span class="ml-4">
+								<i class="fa-solid fa-heart" style="color: #A91B0D;"></i>
+								<i class="text-dark" th:text="${likeCount}"></i>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script th:src="@{/js/profile.js}"></script>
+	<script src="https://kit.fontawesome.com/e7db13a153.js" crossorigin="anonymous"></script>
+</body>
+</html>
